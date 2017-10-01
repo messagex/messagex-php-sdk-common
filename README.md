@@ -1,0 +1,1 @@
+Common SDK for all PHP SDKs for all MesageX services
