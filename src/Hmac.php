@@ -68,8 +68,13 @@ class Hmac
         $headersString      = Hmac::getHeadersString($signatureHeaders);
         $signatureString    = Hmac::getSignatureString($signatureHeaders);
         $signatureHash      = Hmac::sha1HashBase64($signatureString, $credentials->getSecret());
-        $authHeader         = sprintf('hmac username="%s", algorithm="%s", headers="%s", signature="%s"',
-            $credentials->getAccessKey(), 'hmac-sha256', $headersString, $signatureHash);
+        $authHeader         = sprintf(
+            'hmac username="%s", algorithm="%s", headers="%s", signature="%s"',
+            $credentials->getAccessKey(),
+            'hmac-sha256',
+            $headersString,
+            $signatureHash
+        );
 
         $request = $request->withHeader('Authorization', $authHeader)
             ->withHeader('Date', $date);
