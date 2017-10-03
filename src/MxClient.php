@@ -75,8 +75,7 @@ abstract class MxClient
          */
         if (! isset($args['service'])) {
             $args['service'] = Functions::descriptor(
-                $this->getServiceDescriptorPath(),
-                $this->resolveServiceNameFormClass()
+                $this->getServiceDescriptorPath()
             );
         }
 
@@ -170,24 +169,6 @@ abstract class MxClient
     private function addSignatureMiddleware(HandlerStack $handlerStack, callable $credentialsProvider)
     {
         $handlerStack->push(SignatureMiddleware::sign($credentialsProvider));
-    }
-
-    /**
-     * Resolves service name based on client from which call originated.
-     *
-     * @return null|string Service name or null in case call was made directly on base client.
-     */
-    private function resolveServiceNameFormClass()
-    {
-        $class = get_class($this);
-
-        if ($class === __CLASS__) {
-            return null;
-        }
-
-        $service = substr($class, strrpos($class, '\\') + 1, -6);
-
-        return strtolower($service);
     }
 
     /**
