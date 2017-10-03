@@ -103,9 +103,8 @@ abstract class MxClient
 
     /**
      * Methods that represent action on the API are not directly implemented. This method is used
-     * to capture all of those calls. Resolves service name based on the client from which it was
-     * called, loads service definition from descriptor file and sends request to defined endpoint.
-     * Performs serialization of input and deserialization of response from API.
+     * to capture all of those calls. Loads service definition from descriptor file and sends request
+     * to defined endpoint. Performs serialization of input and deserialization of response from API.
      *
      * @param string $name Name of the called method.
      * @param array $arguments Arguments passed to the method.
