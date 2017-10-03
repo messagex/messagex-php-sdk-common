@@ -22,6 +22,21 @@ use Psr\Http\Message\RequestInterface;
 class Hmac
 {
     /**
+     *
+     */
+    const ALGORITHM_SHA1 = 'hmac-sha1';
+
+    /**
+     *
+     */
+    const ALGORITHM_SHA256 = 'hmac-sha256';
+
+    /**
+     *
+     */
+    const ALGORITHM_SHA512 = 'hmac-sha512';
+
+    /**
      * Signs the request with the credentials.
      *
      * @param RequestInterface $request
@@ -71,7 +86,7 @@ class Hmac
         $authHeader         = sprintf(
             'hmac username="%s", algorithm="%s", headers="%s", signature="%s"',
             $credentials->getAccessKey(),
-            'hmac-sha256',
+            Hmac::ALGORITHM_SHA256,
             $headersString,
             $signatureHash
         );
@@ -109,7 +124,7 @@ class Hmac
     public static function sha1HashBase64($signature, $secret)
     {
         return base64_encode(
-            hash_hmac('sha256', $signature, $secret, true)
+            hash_hmac(Hmac::ALGORITHM_SHA256, $signature, $secret, true)
         );
     }
 
