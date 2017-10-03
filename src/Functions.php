@@ -9,8 +9,7 @@
 
 namespace MessageX;
 
-use MessageX\Exception\Service\InvalidServiceName;
-use MessageX\Exception\Service\UnknownService;
+use MessageX\Exception\InvalidDescriptor;
 
 /**
  * Helper functions.
@@ -24,13 +23,11 @@ class Functions
     /**
      * Loads information about services from descriptor file.
      *
-     * @param string $path
-     * @param null $service Service name or null for all services.
+     * @param string $path Path to service descriptor file.
      * @return array Service(s) descriptor.
-     * @throws InvalidServiceName
-     * @throws UnknownService
+     * @throws InvalidDescriptor
      */
-    public static function descriptor($path, $service = null)
+    public static function descriptor($path)
     {
         static $descriptor = [];
 
@@ -41,18 +38,12 @@ class Functions
             );
         }
 
-        if (! is_string($service)) {
-            throw new InvalidServiceName($service);
+        if (null === $descriptor) {
+            throw new InvalidDescriptor(
+                sprintf('Descriptor at %s is invalid', $path)
+            );
         }
 
-        if (null !== $service) {
-            if (! array_key_exists($service, $descriptor)) {
-                throw new UnknownService($service);
-            }
-
-            return $descriptor[$service];
-        }
-
-        return $descriptor;
+        return $descriptor['service'];
     }
 }
