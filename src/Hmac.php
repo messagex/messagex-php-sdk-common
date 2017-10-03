@@ -24,17 +24,17 @@ class Hmac
     /**
      *
      */
-    const ALGORITHM_SHA1 = 'hmac-sha1';
+    const ALGORITHM_SHA1 = 'sha1';
 
     /**
      *
      */
-    const ALGORITHM_SHA256 = 'hmac-sha256';
+    const ALGORITHM_SHA256 = 'sha256';
 
     /**
      *
      */
-    const ALGORITHM_SHA512 = 'hmac-sha512';
+    const ALGORITHM_SHA512 = 'sha512';
 
     /**
      * Signs the request with the credentials.
@@ -84,7 +84,7 @@ class Hmac
         $signatureString    = Hmac::getSignatureString($signatureHeaders);
         $signatureHash      = Hmac::sha1HashBase64($signatureString, $credentials->getSecret());
         $authHeader         = sprintf(
-            'hmac username="%s", algorithm="%s", headers="%s", signature="%s"',
+            'hmac username="%s", algorithm="hmac-%s", headers="%s", signature="%s"',
             $credentials->getAccessKey(),
             Hmac::ALGORITHM_SHA256,
             $headersString,
