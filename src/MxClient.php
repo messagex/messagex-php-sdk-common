@@ -94,7 +94,12 @@ abstract class MxClient
 
         $this->addSignatureMiddleware($handlerStack, $this->credentialsProvider);
 
-        $this->client = new Client(['handler' => $handlerStack, 'base_uri' => 'http://10.8.88.97:8000']);
+        $this->client = new Client(
+            [
+                'handler'   => $handlerStack,
+                'base_uri'  => $this->config['service']['host']
+            ]
+        );
     }
 
     /**
