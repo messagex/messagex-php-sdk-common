@@ -24,7 +24,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class MsxClient
+ * Class MxClient
  *
  * Base client class for all service specific clients.
  * Handles all of the communication to the API.
@@ -64,7 +64,7 @@ abstract class MxClient
     private $serializer;
 
     /**
-     * MsxClient constructor.
+     * MxClient constructor.
      * @param array $args User specified arguments.
      */
     public function __construct(array $args = [])
