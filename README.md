@@ -1,1 +1,4 @@
-Common SDK for all PHP SDKs for all MesageX services
+MessageX PHP SDK Common
+=======================
+
+Common package for MessageX PHP SDKs

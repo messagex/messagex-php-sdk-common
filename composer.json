@@ -1,0 +1,24 @@
+{
+    "name": "messagex/messagex-php-sdk-common",
+    "type": "library",
+    "description": "MessageX PHP SDK Common",
+    "keywords": ["messagex", "php", "sms", "email", "sdk"],
+    "homepage": "https://messagex.com",
+    "license": "MIT",
+    "authors": [
+        {"name": "Silvio Marijic", "email": "silvio.marijic@smsglobal.com"}
+    ],
+    "autoload": {
+        "psr-4": {
+            "MessageX\\": "src/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "6.3.0",
+        "symfony/options-resolver": "^3.3",
+        "jms-serializer/serializer": "1.3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "6.3.0"
+    }
+}
