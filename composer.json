@@ -1,5 +1,5 @@
 {
-    "name": "messagex/messagex-php-sdk-common",
+    "name": "messagex/php-sdk-common",
     "type": "library",
     "description": "MessageX PHP SDK Common",
     "keywords": ["messagex", "php", "sms", "email", "sdk"],
