@@ -124,7 +124,7 @@ abstract class MxClient
         $body = $this->serializer
             ->serialize($arguments[0], 'json');
 
-        return $this->send(
+        $response = $this->send(
             new Request(
                 $definition['method'],
                 $definition['requestUri'],
@@ -132,6 +132,19 @@ abstract class MxClient
                 $body
             )
         );
+
+        if (! array_key_exists($response->getStatusCode(), $definition['response'])) {
+            return $response;
+        }
+
+        $mapping = $definition['response'][$response->getStatusCode()];
+
+        return $this->serializer
+            ->deserialize(
+                $response->getBody()->getContents(),
+                $mapping['type'],
+                'json')
+            ;
     }
 
     /**
