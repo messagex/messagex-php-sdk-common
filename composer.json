@@ -1,13 +1,14 @@
 {
     "name": "messagex/php-sdk-common",
     "type": "library",
-    "description": "MessageX PHP SDK Common",
-    "keywords": ["messagex", "php", "sms", "email", "sdk"],
-    "homepage": "https://messagex.com",
+    "description": "Common libraries for MessageX PHP SDKs",
+    "keywords": ["messagex", "mx", "php", "sms", "email", "sdk", "library"],
+    "homepage": "https://www.messagex.com",
     "license": "MIT",
-    "authors": [
-        {"name": "Silvio Marijic", "email": "silvio.marijic@smsglobal.com"}
-    ],
+    "authors": [{
+        "name": "Silvio Marijic",
+        "email": "silvio.marijic@smsglobal.com"
+    }],
     "autoload": {
         "psr-4": {
             "MessageX\\": "src/"
