@@ -82,7 +82,7 @@ class Hmac
 
         $headersString      = Hmac::getHeadersString($signatureHeaders);
         $signatureString    = Hmac::getSignatureString($signatureHeaders);
-        $signatureHash      = Hmac::sha1HashBase64($signatureString, $credentials->getSecret());
+        $signatureHash      = Hmac::shaHashBase64($signatureString, $credentials->getSecret());
         $authHeader         = sprintf(
             'hmac username="%s", algorithm="hmac-%s", headers="%s", signature="%s"',
             $credentials->getAccessKey(),
@@ -115,13 +115,13 @@ class Hmac
     }
 
     /**
-     * Base64 of signature hashed with HMAC using SHA1.
+     * Base64 of signature hashed with HMAC using SHA hash.
      *
      * @param string $signature String composed of specific headers.
      * @param string $secret Secret part of credentials.
      * @return string Base64 string.
      */
-    public static function sha1HashBase64($signature, $secret)
+    public static function shaHashBase64($signature, $secret)
     {
         return base64_encode(
             hash_hmac(Hmac::ALGORITHM_SHA256, $signature, $secret, true)
