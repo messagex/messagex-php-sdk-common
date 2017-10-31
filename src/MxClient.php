@@ -164,6 +164,7 @@ abstract class MxClient
      *
      * @param RequestInterface $request
      * @return ResponseInterface Response from API.
+     * @deprecated
      */
     public function send(RequestInterface $request)
     {
