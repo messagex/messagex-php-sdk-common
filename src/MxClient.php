@@ -135,7 +135,7 @@ abstract class MxClient
                 $this->sendAsync(
                     new Request(
                         $definition['method'],
-                        $definition['requestUri'],
+                        "{$definition['version']}{$definition['requestUri']}",
                         ['Content-Type' => 'application/json'],
                         $body))
                     ->then(
