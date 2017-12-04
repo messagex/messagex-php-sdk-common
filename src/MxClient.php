@@ -12,6 +12,7 @@ namespace MessageX;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
@@ -108,12 +109,14 @@ abstract class MxClient
      *
      * @param string $name Name of the called method.
      * @param array $arguments Arguments passed to the method.
-     * @return ResponseInterface For async calls returns ResponseInterface otherwise PromiseInterface.
+     * @return ResponseInterface|PromiseInterface For async calls returns ResponseInterface otherwise PromiseInterface.
      * @throws InvalidServiceCall
      */
     final public function __call($name, $arguments)
     {
-        $name = ucfirst($name);
+        $name   = ucfirst($name);
+        $async  = 'Async' === substr($name, -5);
+        $name   = $async? substr($name, 0, strlen($name) - 5) : $name;
 
         if (! array_key_exists($name, $this->config['service']['endpoints'])) {
             throw new InvalidServiceCall($name);
@@ -124,27 +127,36 @@ abstract class MxClient
         $body = $this->serializer
             ->serialize($arguments[0], 'json');
 
-        $response = $this->send(
-            new Request(
-                $definition['method'],
-                $definition['requestUri'],
-                ['Content-Type' => 'application/json'],
-                $body
-            )
+        $promise = new Promise(
+            function () use ($definition, $body, &$promise) {
+                /**
+                 * @var PromiseInterface $promise
+                 */
+                $this->sendAsync(
+                    new Request(
+                        $definition['method'],
+                        "{$definition['version']}{$definition['requestUri']}",
+                        ['Content-Type' => 'application/json'],
+                        $body))
+                    ->then(
+                        function (ResponseInterface $response) use ($definition, $promise) {
+                            if (! array_key_exists($response->getStatusCode(), $definition['response'])) {
+                                return $response;
+                            }
+
+                            $mapping = $definition['response'][$response->getStatusCode()];
+
+                            return $promise->resolve($this->serializer->deserialize(
+                                $response->getBody()->getContents(),
+                                $mapping['type'],
+                                'json'));
+                        })->wait();
+            }
         );
 
-        if (! array_key_exists($response->getStatusCode(), $definition['response'])) {
-            return $response;
-        }
-
-        $mapping = $definition['response'][$response->getStatusCode()];
-
-        return $this->serializer
-            ->deserialize(
-                $response->getBody()->getContents(),
-                $mapping['type'],
-                'json')
-            ;
+        return $async
+            ? $promise
+            : $promise->wait();
     }
 
     /**
@@ -152,6 +164,7 @@ abstract class MxClient
      *
      * @param RequestInterface $request
      * @return ResponseInterface Response from API.
+     * @deprecated
      */
     public function send(RequestInterface $request)
     {
