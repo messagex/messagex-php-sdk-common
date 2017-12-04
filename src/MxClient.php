@@ -23,6 +23,7 @@ use MessageX\Exception\Service\InvalidServiceCall;
 use MessageX\Middleware\SignatureMiddleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 /**
  * Class MxClient
@@ -67,6 +68,7 @@ abstract class MxClient
     /**
      * MxClient constructor.
      * @param array $args User specified arguments.
+     * @throws Exception\InvalidDescriptor
      */
     public function __construct(array $args = [])
     {
@@ -111,6 +113,7 @@ abstract class MxClient
      * @param array $arguments Arguments passed to the method.
      * @return ResponseInterface|PromiseInterface For async calls returns ResponseInterface otherwise PromiseInterface.
      * @throws InvalidServiceCall
+     * @throws Throwable
      */
     final public function __call($name, $arguments)
     {
