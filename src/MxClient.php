@@ -23,6 +23,7 @@ use MessageX\Exception\Service\InvalidServiceCall;
 use MessageX\Middleware\SignatureMiddleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 /**
  * Class MxClient
@@ -67,6 +68,7 @@ abstract class MxClient
     /**
      * MxClient constructor.
      * @param array $args User specified arguments.
+     * @throws Exception\InvalidDescriptor
      */
     public function __construct(array $args = [])
     {
@@ -111,12 +113,14 @@ abstract class MxClient
      * @param array $arguments Arguments passed to the method.
      * @return ResponseInterface|PromiseInterface For async calls returns ResponseInterface otherwise PromiseInterface.
      * @throws InvalidServiceCall
+     * @throws Throwable
      */
     final public function __call($name, $arguments)
     {
-        $name   = ucfirst($name);
-        $async  = 'Async' === substr($name, -5);
-        $name   = $async? substr($name, 0, strlen($name) - 5) : $name;
+        $name    = ucfirst($name);
+        $async   = 'Async' === substr($name, -5);
+        $name    = $async? substr($name, 0, strlen($name) - 5) : $name;
+        $version = $this->config['service']['version'];
 
         if (! array_key_exists($name, $this->config['service']['endpoints'])) {
             throw new InvalidServiceCall($name);
@@ -128,14 +132,14 @@ abstract class MxClient
             ->serialize($arguments[0], 'json');
 
         $promise = new Promise(
-            function () use ($definition, $body, &$promise) {
+            function () use ($definition, $body, &$promise, $version) {
                 /**
                  * @var PromiseInterface $promise
                  */
                 $this->sendAsync(
                     new Request(
                         $definition['method'],
-                        "{$definition['version']}{$definition['requestUri']}",
+                        "{$version}{$definition['requestUri']}",
                         ['Content-Type' => 'application/json'],
                         $body))
                     ->then(
